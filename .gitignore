@@ -1,0 +1,6 @@
+# Per-user Box locations. Keep the shareable example configuration instead.
+demo-config.json
+
+# Local artifacts created during a demo run.
+box-ai-source-analysis.md
+rfp-response-draft.md
