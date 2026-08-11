@@ -33,7 +33,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 
 
 OUTPUT_PATH = Path("box-ai-source-analysis.md")
@@ -41,7 +41,7 @@ SUPPORTED_SOURCE_EXTENSIONS = {".pdf", ".docx", ".txt", ".md", ".html", ".htm", 
 LOCALLY_EXTRACTABLE_RFP_EXTENSIONS = {".pdf", ".txt", ".md", ".html", ".htm"}
 
 
-def fail(message: str) -> None:
+def fail(message: str) -> NoReturn:
     print(f"ERROR: {message}", file=sys.stderr)
     raise SystemExit(1)
 

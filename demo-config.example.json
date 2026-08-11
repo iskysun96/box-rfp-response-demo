@@ -1,5 +1,6 @@
 {
   "received_rfp_folder_id": "PASTE_RECEIVED_RFP_FOLDER_ID_HERE",
   "approved_sources_folder_id": "PASTE_APPROVED_SOURCES_FOLDER_ID_HERE",
-  "rfp_response_hub_id": "PASTE_RFP_RESPONSE_HUB_ID_HERE"
+  "rfp_response_hub_id": "PASTE_RFP_RESPONSE_HUB_ID_HERE",
+  "review_folder_id": "PASTE_REVIEW_FOLDER_ID_HERE"
 }

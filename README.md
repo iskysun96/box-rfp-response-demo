@@ -9,11 +9,10 @@ model writes the response draft.
 2. A Python script uses the authenticated Box CLI to retrieve the RFP and ask
    Box AI for source-grounded research from a configured Box Hub.
 3. The script writes `box-ai-source-analysis.md` locally.
-4. A local model—such as Qwen3-14B in Pi—uses that evidence packet to create
+4. A local model—such as Qwen3-14B in Pi, uses that evidence packet to create
    `rfp-response-draft.md` locally.
 5. A human reviews the draft before any separate upload or customer-send step.
-
-The script never uploads, edits, moves, shares, or deletes Box content.
+6. The local model uploads reviewed `rfp-response.md` back to Box.
 
 ## Architecture
 
@@ -27,7 +26,7 @@ Received RFP + approved sources in Box
     box-ai-source-analysis.md (local evidence packet)
                  |
                  v
-      Local Qwen model in Pi drafts the response
+      Local model drafts the response
                  |
                  v
       rfp-response-draft.md (human review required)

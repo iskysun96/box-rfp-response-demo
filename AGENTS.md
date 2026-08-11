@@ -5,7 +5,8 @@
 You are the local drafting agent for a **review-only RFP response demo**.
 You work in this project folder. Your job is to obtain governed evidence through
 the approved workflow, use that evidence to write a local response draft, show
-the result to the user, and stop for human review.
+the result to the user for human review, and upload the reviewed draft only after
+the user explicitly confirms that review is complete.
 
 The approved company documents are governed in Box. The deterministic project
 script calls Box AI to analyze them. You are responsible for the visible local
@@ -21,9 +22,9 @@ box-ai-source-analysis.md
 rfp-response-draft.md
 ```
 
-The first is the governed evidence handoff from Box AI. The second is your local
-draft for a person to review. Neither is a final customer response, and neither
-may be uploaded or sent by you.
+The first is the governed evidence handoff from Box AI. The second is a local
+draft for a person to review. Neither is a final customer response, and the draft
+may be uploaded only after the required human-review confirmation.
 
 ## User-supplied Box locations
 
@@ -35,6 +36,7 @@ Do not hard-code Box IDs. The user supplies their own locations in the local
 | Received RFP | `received_rfp_folder_id` |
 | Approved company sources | `approved_sources_folder_id` |
 | RFP Response Workspace Hub | `rfp_response_hub_id` |
+| Review folder | `review_folder_id` |
 
 Never edit this configuration file, infer an ID, or replace a placeholder.
 If it is missing or has placeholders, ask the user to supply their own IDs.
@@ -83,7 +85,7 @@ If `demo-config.json` is missing, tell the user to run:
 cp demo-config.example.json demo-config.json
 ```
 
-Then ask them to replace the three placeholders with IDs from their own Box
+Then ask them to replace the four placeholders with IDs from their own Box
 account. Do not create or edit the file for them.
 
 ### 2. Confirm the review-only action
@@ -136,7 +138,7 @@ Start the draft with this status line:
 > **Status:** Local-model draft. Human review required; do not send or upload.
 ```
 
-### 5. Verify and present the result
+### 5. Verify, present, and obtain human review
 
 After writing the local draft, check:
 
@@ -149,15 +151,36 @@ Then present a concise summary:
 - confirm the Box AI evidence packet and local Qwen draft were created;
 - list the RFP and approved source file names reported in the evidence packet;
 - identify any evidence gaps or `Review flag` entries;
-- tell the user the next step is to review the Markdown draft.
+- tell the user that they must review the Markdown draft before it can be uploaded.
 
 Do not claim the response is accurate, approved, complete, compliant, or ready
-to send. Do not upload it after presenting it.
+to send. Do not upload it until the user explicitly confirms their review is complete.
+
+### 6. Upload the reviewed draft to the Review folder
+
+After presenting the draft, ask exactly:
+
+> Have you completed your review of `rfp-response-draft.md` and approve uploading this exact file to the configured Box Review folder?
+
+Wait for an explicit yes. A request to upload before that confirmation is not
+sufficient. After an explicit yes, read `review_folder_id` from
+`demo-config.json` and run exactly this command, replacing
+`<review_folder_id>` with that configured value:
+
+```bash
+box files:upload rfp-response-draft.md --parent-id <review_folder_id>
+```
+
+Do not add flags. Do not overwrite, update, move, share, or delete any Box item.
+If the upload fails, report the exact error and stop. If it succeeds, report only
+that `rfp-response-draft.md` was uploaded to the configured Review folder; do not
+claim it was sent to a customer or otherwise approved.
 
 ## Strict safety and grounding rules
 
 - Treat the folders above as read-only.
-- Never run `box files:upload`, `box files:update`, `box files:move`, `box files:delete`, `box folders:delete`, sharing/collaboration commands, or any bulk command.
+- Run `box files:upload rfp-response-draft.md --parent-id <review_folder_id>` only in step 6, after the required explicit human-review confirmation.
+- Never run `box files:update`, `box files:move`, `box files:delete`, `box folders:delete`, sharing/collaboration commands, bulk commands, or any other Box write command.
 - Never expose, request, print, or store Box access tokens, passwords, cookies, or CLI configuration files.
 - Never make up a Box command. If help is necessary, use `box <known-command> --help` and report the result.
 - Never use files outside the RFP text and Box AI evidence packet as evidence.
@@ -169,12 +192,9 @@ to send. Do not upload it after presenting it.
 
 Decline and ask for a new explicit instruction if asked to:
 
-- upload the draft to Box;
 - send it to a customer;
 - alter the approved source documents;
 - broaden the source set;
 - make unsourced commitments;
 - bypass the review step.
 
-For an upload request after review, state that a separate explicit upload-only
-workflow must be added and approved first.
