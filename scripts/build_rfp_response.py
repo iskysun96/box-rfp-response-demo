@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a Box AI evidence packet for a local RFP-writing model.
+"""Build a Box AI evidence packet for an RFP drafting agent.
 
 The script uses the authenticated Box CLI to enumerate the received-RFP and
 approved-source folders through a Box Hub. It downloads the RFP locally, then
@@ -7,7 +7,7 @@ uses ``box ai:ask`` to query the Hub's indexed content with the extracted RFP
 questions. Box AI returns source-grounded research notes.
 
 Nothing is uploaded or modified in Box. The output is
-``box-ai-source-analysis.md`` in the current project folder. The local model
+``box-ai-source-analysis.md`` in the current project folder. The drafting agent
 uses that evidence packet to create the separate review-only response draft.
 
 Prerequisites:
@@ -162,7 +162,7 @@ def extract_text(path: Path) -> str:
 def ask_box_ai(hub_id: str, source_files: list[dict[str, Any]], rfp_text: str) -> dict[str, Any]:
     """Ask Box AI against the RFP workspace Hub through the authenticated CLI."""
     source_list = "\n".join(f"- {item['name']} (Box file ID {item['id']})" for item in source_files)
-    prompt = f"""You are a research assistant preparing an evidence packet for a local model that will later draft a customer RFP response.
+    prompt = f"""You are a research assistant preparing an evidence packet for a drafting agent that will later draft a customer RFP response.
 
 Use ONLY the approved company-source files named below as evidence. The Hub also
 contains the received RFP; use it only to understand the customer's questions,
@@ -236,7 +236,7 @@ def render_evidence_packet(
     answer = markdown_escape(ai_response.get("answer", "No answer was returned by Box AI."))
     return f"""# Box AI Source Analysis — Input for Local Drafting
 
-> **Status:** Evidence packet only. A local model may use this packet to draft a response, but a qualified reviewer must approve the final wording.
+> **Status:** Evidence packet only. A drafting agent may use this packet to draft a response, but a qualified reviewer must approve the final wording.
 
 ## Inputs
 
