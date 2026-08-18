@@ -135,7 +135,7 @@ review flags. Do not use external knowledge or files.
 Start the draft with this status line:
 
 ```markdown
-> **Status:** Local-model draft. Human review required; do not send or upload.
+> **Status:** Agent-generated draft. Human review required; do not send or upload.
 ```
 
 ### 5. Verify, present, and obtain human review
@@ -148,7 +148,7 @@ test -s rfp-response-draft.md
 
 Then present a concise summary:
 
-- confirm the Box AI evidence packet and local Qwen draft were created;
+- confirm the Box AI evidence packet and agent-generated draft were created;
 - list the RFP and approved source file names reported in the evidence packet;
 - identify any evidence gaps or `Review flag` entries;
 - tell the user that they must review the Markdown draft before it can be uploaded.
@@ -197,4 +197,3 @@ Decline and ask for a new explicit instruction if asked to:
 - broaden the source set;
 - make unsourced commitments;
 - bypass the review step.
-
